@@ -24,7 +24,8 @@ kmeans-paralelo/
 ├── scripts/
 │   ├── gen_dataset.py       genera datasets sintéticos (clusters gaussianos)
 │   ├── run_benchmark.sh     barrido de versiones/K/hebras -> CSV de tiempos
-│   ├── run_all.sh           compila + genera datos + benchmark (Linux/macOS)
+│   ├── analyze.py           tablas (CSV + Markdown) y figuras desde el CSV
+│   ├── run_all.sh           compila + datos + benchmark + análisis (Linux/macOS)
 │   ├── run_all.ps1          idem para Windows (Visual Studio + CUDA)
 │   ├── kmeans_colab.ipynb   corre las 3 versiones en Google Colab (GPU)
 │   └── verify.py            verifica equivalencia del clustering entre versiones
@@ -107,6 +108,23 @@ powershell -ExecutionPolicy Bypass -File scripts\run_all.ps1
 
 Genera `results/benchmark.csv` con los tiempos por versión, K y número de
 hebras. Variables opcionales: `REPS`, `MAX_ITER`, `K_LIST`, `THREADS_LIST`.
+
+### Análisis (tablas y figuras)
+
+`run_all.sh` / `run_all.ps1` llaman automáticamente a `analyze.py`, que
+también puede ejecutarse por separado sobre cualquier CSV de tiempos:
+
+```bash
+python3 scripts/analyze.py results/benchmark.csv
+# Combinar tiempos de varias máquinas (p.ej. CPU + GPU):
+python3 scripts/analyze.py cpu.csv gpu.csv
+```
+
+Produce, para cualquier combinación de versiones presente en el CSV:
+- `results/tables/summary.csv` y `summary.md` — mediana, speedup y eficiencia.
+- `results/figures/speedup_*.png`, `efficiency_*.png`, `comparison_*.png`.
+
+Requiere Python con `matplotlib`.
 
 ### CUDA sin GPU local: Google Colab
 

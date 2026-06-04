@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 #
 # run_all.sh - Pipeline completo en UNA maquina: compila las tres
-# versiones (seq, OpenMP, CUDA), genera los datasets que falten y corre el
-# benchmark, dejando los tiempos crudos en un CSV. Pensado para una maquina
-# con GPU NVIDIA por terminal/SSH.
+# versiones (seq, OpenMP, CUDA), genera los datasets que falten, corre el
+# benchmark y produce tablas y figuras de analisis. Pensado para una
+# maquina con GPU NVIDIA por terminal/SSH.
 #
 # Correr todo en la misma maquina da una linea base secuencial comun,
 # necesaria para que speedup(OMP) y speedup(CUDA) sean comparables.
@@ -66,14 +66,21 @@ PY
 fi
 echo "    nucleos=$NCPU  THREADS_LIST=[$THREADS_LIST]"
 
-# --- 4. Benchmark -------------------------------------------------------
+# --- 4. Benchmark + analisis --------------------------------------------
 echo ""
-echo ">>> [4/4] Benchmark (REPS=$REPS MAX_ITER=$MAX_ITER)..."
+echo ">>> [4/4] Benchmark (REPS=$REPS MAX_ITER=$MAX_ITER) y analisis..."
 REPS="$REPS" MAX_ITER="$MAX_ITER" THREADS_LIST="$THREADS_LIST" CSV="$CSV" \
     bash scripts/run_benchmark.sh
 
+# Genera tablas (CSV + Markdown) y figuras para el analisis. Requiere
+# Python con matplotlib; si no esta, el CSV de tiempos queda igual.
+python3 scripts/analyze.py "$CSV" || \
+    echo "aviso: analyze.py no corrio (¿falta matplotlib?). El CSV quedo en $CSV"
+
 echo ""
 echo "==================================================================="
-echo " Listo. Resultados crudos (tiempos por version/K/hebras) en:"
-echo "   $CSV"
+echo " Listo."
+echo "   Tiempos:  $CSV"
+echo "   Tablas:   results/tables/summary.csv  y  summary.md"
+echo "   Figuras:  results/figures/*.png"
 echo "==================================================================="

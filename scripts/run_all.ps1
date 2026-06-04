@@ -267,6 +267,16 @@ foreach ($ds in $datasets) {
 }
 Write-Host "`nResultados crudos en $CSV"
 
+# --- Analisis: tablas (CSV + Markdown) y figuras -----------------------------
+if ($python) {
+    Write-Host "`n>>> Analisis (tablas + figuras)..."
+    try { & $python scripts\analyze.py $CSV }
+    catch { Write-Host "    analyze.py no corrio (¿falta matplotlib?). El CSV quedo en $CSV." -ForegroundColor Yellow }
+}
+
 Write-Host "`n===================================================================" -ForegroundColor Cyan
-Write-Host " Listo. Tiempos por version/K/hebras en: $CSV" -ForegroundColor Cyan
+Write-Host " Listo." -ForegroundColor Cyan
+Write-Host "   Tiempos: $CSV" -ForegroundColor Cyan
+Write-Host "   Tablas:  results\tables\summary.csv y summary.md" -ForegroundColor Cyan
+Write-Host "   Figuras: results\figures\*.png" -ForegroundColor Cyan
 Write-Host "===================================================================" -ForegroundColor Cyan
