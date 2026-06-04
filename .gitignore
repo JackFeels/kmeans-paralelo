@@ -1,0 +1,32 @@
+# Binarios compilados
+kmeans_seq
+kmeans_omp
+kmeans_cuda
+*.exe
+*.obj
+*.o
+*.out
+
+# Salidas de ejecucion (tiempos, labels, etc.): se regeneran al correr
+results/
+
+# Datasets sinteticos: regenerables con scripts/gen_dataset.py
+data/small_2d.txt
+data/medium_10d.txt
+data/large_50d.txt
+
+# Config local del editor / herramientas (no del proyecto)
+.cl*/
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.pyc
+
+# Sistema
+.DS_Store
+
+# Bundle y dataset crudo duplicado (no versionar)
+colab_bundle.tar.gz
+data/punto0.txt
